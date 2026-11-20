@@ -1,0 +1,11 @@
+apiVersion: v2
+name: my-static-web
+description: A Helm chart for deploying a static website on AWS EKS
+type: application
+version: 0.1.0
+
+# Optional but recommended metadata
+home: https://github.com:mohammd-khalil/Static-Site-DevSecOps.git
+maintainers:
+  - name: Mohamed Khalil
+    email: mohammdahmedkhalil@gmail.com
