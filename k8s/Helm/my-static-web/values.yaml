@@ -1,0 +1,32 @@
+# Default values for your Helm chart
+replicaCount: 2
+resources:
+  limits:
+    cpu: 200m       # Max 0.2 CPU cores
+    memory: 128Mi   # Max 128 Megabytes RAM
+  requests:
+    cpu: 50m        # Guaranteed 0.05 CPU cores
+    memory: 64Mi    # Guaranteed 64 Megabytes RAM
+image:
+  repository: my-static-image
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  className: "nginx" 
+  hosts:
+    - host: my-static-app.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
