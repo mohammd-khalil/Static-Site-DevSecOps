@@ -21,12 +21,12 @@ jobs:
           fetch-depth: 0 
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v4
+        uses: sonarsource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
       - name: SonarQube Quality Gate
-        uses: SonarSource/sonarqube-quality-gate-action@master
+        uses: SonarSource/sonarqube-quality-gate-action@v1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
