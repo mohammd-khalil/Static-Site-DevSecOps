@@ -8,7 +8,6 @@ on:
 # Permissions required for GHCR and SonarQube
 permissions:
   contents: read
-  packages: write # Required to push to GHCR
 
 jobs:
   sonarqube: # Check the code quality 
@@ -21,18 +20,19 @@ jobs:
           fetch-depth: 0 
 
       - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@v6
+        uses: sonarsource/sonarqube-scan-action@708c7c7110995f73a80a7a0c5cfee4e9961949a0 #v8.4.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
       - name: SonarQube Quality Gate
-        uses: SonarSource/sonarqube-quality-gate-action@v1
+        uses: SonarSource/sonarqube-quality-gate-action@ad79b13d38cce47457fb4059994f2d79e1dc625a #v1.2.1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
   build-and-push:
     name: Build, Scan, and Push to GHCR
     runs-on: ubuntu-latest
+    permissions: write-all
     needs: sonarqube 
     
     outputs:
@@ -52,7 +52,7 @@ jobs:
           echo "image-tag=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GitHub Container Registry (GHCR)
-        uses: docker/login-action@v3
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -64,7 +64,7 @@ jobs:
           docker tag "${{ steps.meta.outputs.image-ref }}:${{ steps.meta.outputs.image-tag }}" "${{ steps.meta.outputs.image-ref }}:latest"
 
       - name: Run Trivy Vulnerability Scanner # Scan the image 
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
         with:
           image-ref: 'ghcr.io/${{ github.repository }}:${{ github.sha }}'
           format: 'table'
@@ -92,7 +92,7 @@ jobs:
 
       - name: Install yq # lightweight command-line tool to edit values.yaml file
         run: |
-          curl -sL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
+          curl -sL --proto "=https" https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
             -o /usr/bin/yq && chmod +x /usr/bin/yq
 
       - name: Update values.yaml
