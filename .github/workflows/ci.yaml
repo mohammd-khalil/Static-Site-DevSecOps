@@ -32,7 +32,8 @@ jobs:
   build-and-push:
     name: Build, Scan, and Push to GHCR
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions: 
+      contents: write
     needs: sonarqube 
     
     outputs:
