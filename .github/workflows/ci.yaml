@@ -8,6 +8,7 @@ on:
 # Permissions required for GHCR and SonarQube
 permissions:
   contents: read
+  packages: write 
 
 jobs:
   sonarqube: # Check the code quality 
@@ -76,8 +77,8 @@ jobs:
       - name: Push Image to GHCR
         # Only pushes if Trivy scan passes (exit-code 0)
         run: |
-          docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
-          docker push ghcr.io/${{ github.repository }}:latest
+           docker push "${{ steps.meta.outputs.image-ref }}:${{ steps.meta.outputs.image-tag }}"
+           docker push "${{ steps.meta.outputs.image-ref }}:latest"
 
   update-values:
     name: Update values.yaml With Image Tag
@@ -116,7 +117,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout "${GITHUB_REF_NAME}"
           git pull --rebase origin "${GITHUB_REF_NAME}"
-          git add values.yaml
+          git add "$VALUES_FILE"
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
