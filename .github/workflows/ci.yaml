@@ -67,7 +67,7 @@ jobs:
       - name: Run Trivy Vulnerability Scanner # Scan the image 
         uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
         with:
-          image-ref: 'ghcr.io/${{ github.repository }}:${{ github.sha }}'
+          image-ref: '${{ steps.meta.outputs.image-ref }}:${{ steps.meta.outputs.image-tag }}'
           format: 'table'
           exit-code: '1'  # Fails the step (returns exit code 1) when matching vulnerabilities are found
           ignore-unfixed: true # Ignores CVEs that do not yet have an official vendor patch/fix available
@@ -99,7 +99,7 @@ jobs:
       - name: Update values.yaml
         env:
           # Map the outputs to clean environment variables
-          IMAGE_REF: ${{ needs.build-and-push.outputs.image-ref }}
+          IMAGE_REF: ${{ needs.build-and-push.outputs.image-ref }}   # already lowercase
           IMAGE_TAG: ${{ needs.build-and-push.outputs.image-tag }}
           VALUES_FILE: "k8s/Helm/my-static-web/values.yaml"
         run: |
