@@ -8,8 +8,6 @@ on:
 # Permissions required for GHCR and SonarQube
 permissions:
   contents: read
-  packages: write 
-
 jobs:
   sonarqube: # Check the code quality 
     name: SonarQube Analysis
@@ -34,7 +32,8 @@ jobs:
     name: Build, Scan, and Push to GHCR
     runs-on: ubuntu-latest
     permissions: 
-      contents: write
+      contents: read
+      packages: write
     needs: sonarqube 
     
     outputs:
@@ -76,6 +75,7 @@ jobs:
 
       - name: Push Image to GHCR
         # Only pushes if Trivy scan passes (exit-code 0)
+        
         run: |
            docker push "${{ steps.meta.outputs.image-ref }}:${{ steps.meta.outputs.image-tag }}"
            docker push "${{ steps.meta.outputs.image-ref }}:latest"
