@@ -2,31 +2,28 @@
 replicaCount: 2
 resources:
   limits:
-    cpu: 200m       # Max 0.2 CPU cores
-    memory: 128Mi   # Max 128 Megabytes RAM
+    cpu: 200m # Max 0.2 CPU cores
+    memory: 128Mi # Max 128 Megabytes RAM
     ephemeral-storage: "512Mi" # Max Temporary disk storage attatched to the pod
   requests:
-    cpu: 50m        # Guaranteed 0.05 CPU cores
-    memory: 64Mi    # Guaranteed 64 Megabytes RAM
+    cpu: 50m # Guaranteed 0.05 CPU cores
+    memory: 64Mi # Guaranteed 64 Megabytes RAM
     ephemeral-storage: "256Mi" # temporary disk storage attatched to the pod
 image:
-  repository: my-static-image
-  tag: "latest"
+  repository: ghcr.io/mohammd-khalil/static-site-devsecops
+  tag: "f69d673c922c2cecdc43268e8b140765ee51a88d"
   pullPolicy: IfNotPresent
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
   annotations: {}
-
 service:
   type: ClusterIP
   port: 8080
-
 ingress:
   enabled: true
-  className: "nginx" 
+  className: "nginx"
   hosts:
     - host: my-static-app.local
       paths:
